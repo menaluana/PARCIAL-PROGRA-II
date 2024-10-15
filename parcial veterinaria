@@ -1,0 +1,356 @@
+MAIN
+public class Main {
+    public static void main(String[] args) {
+        Perro perro1 = new Perro("cacho",12,111,true,"frecuente");
+        Perro perro2 = new Perro("naldo",10,222,false,"nunca");
+
+        Gato gato1 = new Gato("cristian",3,333,true,"regulares");
+        Gato gato2 = new Gato("lola",5,444,false,"todos los dias");
+
+        Reptil reptil1 = new Reptil("paco",1,555,false,Especie.TORTUGA);
+        Reptil reptil2 = new Reptil("amelia",7,666,true,Especie.IGUANA);
+
+        //prueba de interfaces perro
+        System.out.println(perro1.darDeAlta());
+        System.out.println(perro1.cargarVisita("aaa"));
+        System.out.println(perro1.aplicarVacuna());
+        System.out.println(perro1.alimentar());
+
+        //prueba de interfaces gato
+        System.out.println(gato1.darDeAlta());
+        System.out.println(gato1.alimentar());
+        System.out.println(gato1.cargarVisita("eee"));
+        System.out.println(gato1.esterilizar());
+
+        //prueba de interfaces reptil
+        System.out.println(reptil1.darDeAlta());
+        System.out.println(reptil1.alimentar());
+        System.out.println(reptil1.venenosoOnoVenenoso());
+
+        Veterinaria veterinaraLista = new Veterinaria();
+        //funciones de la clase gestora
+        veterinaraLista.agregar(perro1);
+        veterinaraLista.agregar(perro2);
+        veterinaraLista.agregar(gato1);
+        veterinaraLista.agregar(gato2);
+        veterinaraLista.agregar(reptil1);
+        veterinaraLista.agregar(reptil2);
+        
+        System.out.println(veterinaraLista.toString());
+        System.out.printf(veterinaraLista.contar());
+        System.out.printf(veterinaraLista.contarPerros());
+        veterinaraLista.borrarPorNumRegistro(222);
+        System.out.println(veterinaraLista.contar());
+        System.out.println(veterinaraLista.toString());
+
+    }
+}
+
+CLASE ANIMAL
+import java.util.Objects;
+
+public abstract class Animal {
+    private String nombre;
+    private int edad;
+    private int numeroResgistro;
+
+    public String getNombre() {
+        return nombre;
+    }
+
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
+    }
+
+    public int getEdad() {
+        return edad;
+    }
+
+    public void setEdad(int edad) {
+        this.edad = edad;
+    }
+
+    public int getNumeroResgistro() {
+        return numeroResgistro;
+    }
+
+    public void setNumeroResgistro(int numeroResgistro) {
+        this.numeroResgistro = numeroResgistro;
+    }
+
+    public Animal(String nombre, int edad, int numeroResgistro) {
+        this.nombre = nombre;
+        this.edad = edad;
+        this.numeroResgistro = numeroResgistro;
+    }
+    public Animal() {
+        this.nombre = "nodefinido";
+        this.edad = 0;
+        this.numeroResgistro = 0;
+    }
+
+    @Override
+    public String toString() {
+        return "Animal{" +
+                "nombre='" + nombre + '\'' +
+                ", edad=" + edad +
+                ", numeroResgistro=" + numeroResgistro +
+                '}';
+    }
+
+    public String darDeAlta(){
+        return "EL ANIMAL FUE DADO DE ALTA";
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Animal animal = (Animal) o;
+        return numeroResgistro == animal.numeroResgistro;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(numeroResgistro);
+    }
+}
+
+CLASE PERRO
+public final class Perro extends Animal implements iAnimal,iVeterinario,iCuidador {
+    private boolean vacunadoOno;
+    private String visitas;
+
+    public boolean isVacunadoOno() {
+        return vacunadoOno;
+    }
+
+    public void setVacunadoOno(boolean vacunadoOno) {
+        this.vacunadoOno = vacunadoOno;
+    }
+
+    public String getVisitas() {
+        return visitas;
+    }
+
+    public void setVisitas(String visitas) {
+        this.visitas = visitas;
+    }
+
+    public Perro(String nombre, int edad, int numeroResgistro, boolean vacunadoOno, String visitas) {
+        super(nombre, edad, numeroResgistro);
+        this.vacunadoOno = vacunadoOno;
+        this.visitas = visitas;
+    }
+
+    public Perro() {
+        this.vacunadoOno = false;
+        this.visitas = "nodefinido";
+    }
+
+    @Override
+    public String toString() {
+        return "Perro{" +
+                "vacunadoOno=" + vacunadoOno +
+                ", visitas='" + visitas + '\'' +
+                '}';
+    }
+
+    @Override
+    public String alimentar() {
+        return "Perro alimentado";
+    }
+
+    @Override
+    public String revision() {
+        return "El perro fue revisado";
+    }
+    public String aplicarVacuna (){
+        return "Vacuna aplicada";
+    }
+
+    @Override
+    public String cargarVisita(String visitax) {
+        visitas = visitax;
+        return "El perro realizo una visita \n" + visitas;
+    }
+
+}
+CLASE GATO
+public final class Gato extends Animal implements iAnimal, iVeterinario,iCuidador {
+    private boolean esterilizadoOno;
+    private String visitas;
+
+    public boolean isEsterilizadoOno() {
+        return esterilizadoOno;
+    }
+
+    public void setEsterilizadoOno(boolean esterilizadoOno) {
+        this.esterilizadoOno = esterilizadoOno;
+    }
+
+    public String getVisitas() {
+        return visitas;
+    }
+
+    public void setVisitas(String visitas) {
+        this.visitas = visitas;
+    }
+
+    public Gato(String nombre, int edad, int numeroResgistro, boolean esterilizadoOno, String visitas) {
+        super(nombre, edad, numeroResgistro);
+        this.esterilizadoOno = esterilizadoOno;
+        this.visitas = visitas;
+    }
+
+    public Gato() {
+        this.esterilizadoOno = false;
+        this.visitas = "nodefinido";
+    }
+
+    @Override
+    public String toString() {
+        return "Gato{" +
+                "esterilizadoOno=" + esterilizadoOno +
+                ", visitas='" + visitas + '\'' +
+                '}';
+    }
+
+    public String esterilizar (){
+        if (!esterilizadoOno){
+            esterilizadoOno = true;
+        }
+        return "EL GATO FUE ESTERILIZADO";
+    }
+
+    @Override
+    public String alimentar() {
+        return "Gato alimentado";
+    }
+
+    @Override
+    public String revision() {
+        return "El gato fue revisado";
+    }
+
+    @Override
+    public String cargarVisita(String v) {
+        v = visitas;
+        return "El gato realizo una visita " + v ;
+    }
+
+}
+CLASE REPTIL
+public final class Reptil extends Animal implements iAnimal, iVeterinario  {
+    private boolean venenosoOno;
+    private Especie espeice;
+
+    public boolean isVenenosoOno() {
+        return venenosoOno;
+    }
+
+    public void setVenenosoOno(boolean venenosoOno) {
+        this.venenosoOno = venenosoOno;
+    }
+
+    public Especie getEspeice() {
+        return espeice;
+    }
+
+    public void setEspeice(Especie espeice) {
+        this.espeice = espeice;
+    }
+
+    public Reptil(String nombre, int edad, int numeroResgistro, boolean venenosoOno, Especie espeice) {
+        super(nombre, edad, numeroResgistro);
+        this.venenosoOno = venenosoOno;
+        this.espeice = espeice;
+    }
+
+    public Reptil() {
+        this.venenosoOno = false;
+        this.espeice = Especie.TORTUGA;
+    }
+
+    @Override
+    public String toString() {
+        return "Reptil{" +
+                "venenosoOno=" + venenosoOno +
+                ", espeice=" + espeice +
+                '}';
+    }
+    public String venenosoOnoVenenoso (){
+        boolean veneno = true;
+        if (!venenosoOno){
+            veneno = false;
+        }
+        return "Si el animal es venenoso se mostrara true, en caso contrario false ---> " + veneno;
+    }
+
+    @Override
+    public String alimentar() {
+        return "Reptil alimentado";
+    }
+
+    @Override
+    public String revision() {
+        return "El reptil fue revisado";
+    }
+}
+CLASE GESTORA
+import java.util.ArrayList;
+
+public class Veterinaria {
+    ArrayList<Animal> listado;
+
+    public Veterinaria() {
+        this.listado = new ArrayList<>();
+    }
+
+    public void agregar (Animal a){
+        listado.add(a);
+    }
+    public String contar (){
+        return "La cantidad de animales en la veterinaria es: " + listado.size();
+    }
+
+    public String contarPerros (){
+        int p = 0;
+        for (int i = 0; i < listado.size(); i++) {
+            if (listado.get(i) instanceof Perro){
+                p++;
+            }
+        }
+        return "La cantidad de perros que hay en la veterinaria es: " + p;
+    }
+
+    public void borrarPorNumRegistro (int numeroAborrar){
+        Perro a = new Perro();
+        a.setNumeroResgistro(numeroAborrar);
+        listado.remove(a);
+    }
+
+    @Override
+    public String toString() {
+        return "Veterinaria{" +
+                "listado=" + listado +
+                '}';
+    }
+}
+INTERFACES
+public interface iAnimal {
+    public String alimentar();
+}
+public interface iCuidador {
+    public String cargarVisita(String v);
+}
+public interface iVeterinario {
+    public String revision();
+}
+ENUM
+public enum Especie {
+    TORTUGA,
+    IGUANA,
+    SERPIENTE;
+}
+
